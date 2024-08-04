@@ -1,0 +1,17 @@
+<!--
+  Date format snippet
+  See: ${JS_ROOT}/utils/locale-dateime.js
+-->
+
+{% assign df_strftime = '%d/%m/%Y' %}
+{% assign df_dayjs = 'll' %}
+
+<time
+  {% if include.class %}
+    class="{{ include.class }}"
+  {% endif %}
+  data-ts="{{ include.date | date: '%s' }}"
+  data-df="{{ df_dayjs }}"
+>
+  {{ include.date | date: df_strftime }}
+</time>
