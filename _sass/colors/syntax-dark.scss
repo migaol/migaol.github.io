@@ -3,20 +3,20 @@
  */
 
 @mixin dark-syntax {
-  --language-border-color: #2d2d2d;
-  --highlight-bg-color: #151515;
-  --highlighter-rouge-color: #c9def1;
-  --highlight-lineno-color: #808080;
+  --language-border-color: rgb(45, 45, 45);
+  --highlight-bg-color: rgb(21, 21, 21);
+  --highlighter-rouge-color: rgb(201, 222, 241);
+  --highlight-lineno-color: rgb(128, 128, 128);
   --inline-code-bg: rgba(255, 255, 255, 0.05);
-  --code-color: #b0b0b0;
-  --code-header-text-color: #6a6a6a;
-  --code-header-muted-color: #353535;
-  --code-header-icon-color: #565656;
-  --clipboard-checked-color: #2bcc2b;
-  --filepath-text-color: #cacaca;
+  --code-color: rgb(176, 176, 176);
+  --code-header-text-color: rgb(106, 106, 106);
+  --code-header-muted-color: rgb(53, 53, 53);
+  --code-header-icon-color: rgb(86, 86, 86);
+  --clipboard-checked-color: rgb(43, 204, 43);
+  --filepath-text-color: rgb(202, 202, 202);
 
   .highlight .gp {
-    color: #87939d;
+    color: rgb(135, 147, 157);
   }
 
   /* --- Syntax highlight theme from `rougify style base16.dark` --- */
@@ -31,13 +31,13 @@
 
   .highlight,
   .highlight .w {
-    color: #d0d0d0;
-    background-color: #151515;
+    color: rgb(208, 208, 208);
+    background-color: rgb(21, 21, 21);
   }
 
   .highlight .err {
-    color: #151515;
-    background-color: #ac4142;
+    color: rgb(21, 21, 21);
+    background-color: rgb(172, 65, 66);
   }
 
   .highlight .c,
@@ -47,39 +47,39 @@
   .highlight .cpf,
   .highlight .c1,
   .highlight .cs {
-    color: #848484;
+    color: rgb(132, 132, 132);
   }
 
   .highlight .cp {
-    color: #f4bf75;
+    color: rgb(244, 191, 117);
   }
 
   .highlight .nt {
-    color: #f4bf75;
+    color: rgb(244, 191, 117);
   }
 
   .highlight .o,
   .highlight .ow {
-    color: #d0d0d0;
+    color: rgb(208, 208, 208);
   }
 
   .highlight .p,
   .highlight .pi {
-    color: #d0d0d0;
+    color: rgb(208, 208, 208);
   }
 
   .highlight .gi {
-    color: #90a959;
+    color: rgb(144, 169, 89);
   }
 
   .highlight .gd {
-    color: #f08a8b;
-    background-color: #320000;
+    color: rgb(240, 138, 139);
+    background-color: rgb(50, 0, 0);
   }
 
   .highlight .gh {
-    color: #6a9fb5;
-    background-color: #151515;
+    color: rgb(106, 159, 181);
+    background-color: rgb(21, 21, 21);
     font-weight: bold;
   }
 
@@ -88,19 +88,19 @@
   .highlight .kp,
   .highlight .kr,
   .highlight .kv {
-    color: #aa759f;
+    color: rgb(170, 117, 159);
   }
 
   .highlight .kc {
-    color: #d28445;
+    color: rgb(210, 132, 69);
   }
 
   .highlight .kt {
-    color: #d28445;
+    color: rgb(210, 132, 69);
   }
 
   .highlight .kd {
-    color: #d28445;
+    color: rgb(210, 132, 69);
   }
 
   .highlight .s,
@@ -112,39 +112,39 @@
   .highlight .sh,
   .highlight .sx,
   .highlight .s1 {
-    color: #90a959;
+    color: rgb(144, 169, 89);
   }
 
   .highlight .sa {
-    color: #aa759f;
+    color: rgb(170, 117, 159);
   }
 
   .highlight .sr {
-    color: #75b5aa;
+    color: rgb(117, 181, 170);
   }
 
   .highlight .si {
-    color: #b76d45;
+    color: rgb(183, 109, 69);
   }
 
   .highlight .se {
-    color: #b76d45;
+    color: rgb(183, 109, 69);
   }
 
   .highlight .nn {
-    color: #f4bf75;
+    color: rgb(244, 191, 117);
   }
 
   .highlight .nc {
-    color: #f4bf75;
+    color: rgb(244, 191, 117);
   }
 
   .highlight .no {
-    color: #f4bf75;
+    color: rgb(244, 191, 117);
   }
 
   .highlight .na {
-    color: #6a9fb5;
+    color: rgb(106, 159, 181);
   }
 
   .highlight .m,
@@ -155,10 +155,10 @@
   .highlight .il,
   .highlight .mo,
   .highlight .mx {
-    color: #90a959;
+    color: rgb(144, 169, 89);
   }
 
   .highlight .ss {
-    color: #90a959;
+    color: rgb(144, 169, 89);
   }
 }
