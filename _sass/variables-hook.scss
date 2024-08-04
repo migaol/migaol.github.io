@@ -2,7 +2,38 @@
   Appending custom SCSS variables will override the default ones in `_sass/addon/variables.scsss`
 */
 
+.w-30 {
+  width: 30%;
+  height: auto;
+}
+
 .w-40 {
   width: 40%;
   height: auto;
+}
+
+.b10 {
+  margin-bottom: 10px;
+}
+
+.lr10 {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.r10 {
+  margin-right: 10px;
+}
+
+.disp-flex {
+  display: flex;
+}
+
+.itx {
+  font-style: italic;
+}
+
+.center-all {
+  align-items: center;
+  justify-content: center;
 }
