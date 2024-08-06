@@ -25,6 +25,14 @@
   margin-right: 10px;
 }
 
+.r5 {
+  margin-right: 5px;
+}
+
+.l5 {
+  margin-left: 5px;
+}
+
 .disp-flex {
   display: flex;
 }
@@ -36,4 +44,8 @@
 .center-all {
   align-items: center;
   justify-content: center;
+}
+
+.caption {
+  font-size: 12px;
 }
