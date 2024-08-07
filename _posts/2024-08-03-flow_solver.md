@@ -1,10 +1,15 @@
 ---
 title: Flow Free Solver
+description: A bot which automatically reads, deciphers, and solves Flow Free puzzles.
 date: 2024-08-03 -0400
 categories: [Project Write-ups]
 tags: [projects]
 media_subpath: /assets/img/2024-08-03-flow_solver
 math: true
+image:
+  path: https://images.squarespace-cdn.com/content/v1/586beec5e58c624be9f7b5a2/1483733488663-JYE1NGU7MZCBOTGO9JQI/image-asset.jpeg?format=2500w
+  lqip: https://images.squarespace-cdn.com/content/v1/586beec5e58c624be9f7b5a2/1483733488663-JYE1NGU7MZCBOTGO9JQI/image-asset.jpeg?format=250w
+  alt: Flow Free
 ---
 
 ## **Too long, didn't read**
