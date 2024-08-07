@@ -93,7 +93,7 @@ Coincidentally, these forced moves reach the other orange terminal.
   <img src="puzzle1-5.jpg" alt="puzzle 5" class="w-25">
 </figure>
 
-Chances are, this was not your train of thought, but I hope this example helped illustrate some of the thought process behind solving flow puzzles at a smaller scale.
+Chances are, this was not your train of thought and you solved the entire puzzle in a second, but I hope this example helped illustrate some of the thought process behind solving flow puzzles at a smaller scale.
 
 ### **Computers**
 
@@ -108,7 +108,7 @@ The tricky part is programming a computer to do the solving.  Image parsing and 
 </figure>
 Heuristics can only get so far.  There are only two forced moves (red and pink terminals in the bottom right corner) and there are no outright obvious pipe connections.
 
-Backtracking is unavoidable, of course.  As seen in the example above, you can't just "know" the solution without trying something first.  But a pure bashing solution like basic depth-first search (DFS), where you explore every option of moving pipes one by one, would take very long.  There are 38 possible starting moves in the example puzzle (enumerated below).  Accounting for forced moves actually increases that number (because it allows new, un-forced moves).  Of course, testing more new moves would increase that number further.
+As seen in the example above, you can't just "know" the solution without trying something first.  But a pure bashing solution like basic depth-first search (DFS), where you explore every option of moving pipes one by one, would take very long.  There are 38 possible starting moves in the example puzzle (enumerated below).  Accounting for forced moves actually increases that number (because it allows new, un-forced moves).  Of course, testing more new moves would increase that number further.
 <figure class="disp-flex center-all flex-column">
   <img src="puzzle2-0-first_moves.jpg" alt="Starting moves" class="w-50">
   <figcaption class="itx caption">Move variety like chess.</figcaption>
@@ -118,17 +118,17 @@ Backtracking is unavoidable, of course.  As seen in the example above, you can't
 
 Note that this not impossible to implement, I just thought it would not be worth the resources.  In fact, other people have implemented this!  Check the appendix for more.
 
-I initially considered a different approach to this problem.
+I initially considered a different approach to this problem, [**A-star (A\*) search**](https://en.wikipedia.org/wiki/A*_search_algorithm).  In short, A\* is a form of DFS which guides the search using heuristics which quantify the closeness of a path to the final solution to take more likely paths before unlikely ones, so it will probably never even consider an incorrect path.  The idea is that if DFS takes too long, then an optimized version should do better.  However, I could not come up with a good heuristic to use.
 
-[**A-star (A\*) search**](https://en.wikipedia.org/wiki/A*_search_algorithm).  In short, A\* is a form of DFS which guides the search using heuristics which quantify the closeness of a path to the final solution to take more likely paths before unlikely ones.  If DFS takes too long, then an optimized version should do better.  However, I could not come up with a good heuristic to use.
+Note that we wouldn't be using A\* to find pipe connections directly; at each stage of the search, the search would consider an entire state of the grid with its unique collection of pipe connections holistically.  The source would then be an empty puzzle and the target would be a solved state, and the search traverses through various puzzle states.
 
-Note that we wouldn't be using A\* to find pipe connections directly; at each stage, the search would consider an entire state of the grid with its unique collection of pipe connections.  The source would then be an empty puzzle and the target would be a solved state.  It's difficult to quantify certain characteristics, such as how "close" a game state is to the solution, which is necessary for A\* to function.  Pipe percent (the percentage of the grid covered by pipe) is one metric, but it is almost useless because of things like this:
+It's difficult to quantify certain characteristics, such as how "close" a game state is to the solution, which is necessary for A\* to function.  Pipe percent (the percentage of the grid covered by pipe) is one metric, but it is almost useless because of things like this:
 <figure class="disp-flex center-all flex-column">
   <img src="large_pipe_pct.jpg" alt="Pipe percentage is useless" class="w-50">
   <figcaption class="itx caption">We're 91% of the way to solving the puzzle!  Wait...</figcaption>
 </figure>
 
-Additionally, to quantify closeness to a solution, it is necessary to consider terminals which are cut off from their counterpart (like every non-aqua terminal in the image above).  However, this requires checking the entire grid at each state which I thought would be inefficient.
+Additionally, to quantify closeness to a solution, it is necessary to consider terminals which are cut off from their counterpart (for example, every non-aqua terminal in the image above).  However, this requires checking the entire grid at each state which I thought would be inefficient.
 
 #### **An open-end strategy?**
 
@@ -143,7 +143,7 @@ We need not get bogged down in the theory of this, but the key here is that solv
 ---
 ## SAT reduction
 
-The SAT problem takes as input a boolean formula called $$\phi$$, which is essentially a set of variables $$x_1, x_2, ...$$ with boolean operators.  For example,
+The SAT problem takes a boolean formula called $$\phi$$ as input, which is essentially a set of variables $$x_1, x_2, ...$$ with boolean operators.  For example,
 $$\phi = (x_1 \lor x_2) \land (x_3 \lor \neg x_1)$$
 is a boolean formula.  It then outputs a boolean value assignment $$\rho$$ for these variables such that $$\phi$$ evaluates to true.  In this case, the assignment
 $$\rho = \{x_1=F, x_2=T, x_3=T\}$$
@@ -152,7 +152,7 @@ $$\rho(\phi) = (F \lor T) \land (T \lor \neg F)$$
 , which evalues to $$T$$
 and thus $$\rho$$ is called a _satisfying_ assignment of the variables in $$\phi$$.  If no such $$\rho$$ exists, then $$\phi$$ would be called _unsatisfiable_.
 
-The vast majority of SAT solvers actually take as input a [_conjunctive normal form (CNF)_ boolean formula](https://en.wikipedia.org/wiki/Conjunctive_normal_form) which is interchangeable with a regular boolean formula, for ease of representation.  A CNF formula is subject to several rules:
+The vast majority of SAT solvers actually take a [_conjunctive normal form (CNF)_ boolean formula](https://en.wikipedia.org/wiki/Conjunctive_normal_form) as input, which is interchangeable with a regular boolean formula, for ease of representation.  A CNF formula is subject to several rules:
 - A CNF formula only contains the operators AND ($$\land$$), OR ($$\lor$$), NOT ($$\neg$$), and parentheses.
 - A CNF formula consists of a conjunction of clauses, which are in turn a disjunction of literals.
 - A literal is either a variable, negated or not: $$x_1$$ and $$\neg x_2$$ are both valid literals.
@@ -162,7 +162,7 @@ $$x_1 \lor x_2 \lor \neg x_3$$.
 $$\phi = (x_1 \lor x_2) \land (x_3 \lor \neg x_1)$$
 from above is a conjunction of clauses, and thus a CNF formula.
 
-To reduce the flow problem to SAT, we must create a way to convert a puzzle into a CNF boolean formula.
+In short, CNF is an "AND of OR's of literals".  To reduce the flow problem to SAT, we must create a way to convert a puzzle into a CNF boolean formula.
 
 ### Enforcing the rules
 
@@ -220,7 +220,7 @@ This is Jumbo Rectangle - 150, the final level of the largest board size.  With 
   </div>
 </figure>
 
-This project was made with Python so it is not as fast as possible, but less than half the time is spent on creating the many clauses, which is good enough.  Many solvers are implemented in C++ with a Python interface, hence the speed.
+This project was made with Python so it is not as fast as possible, but less than half the time is spent on creating the many clauses, which is good enough.  Many solvers are implemented in C++ with a Python interface, hence the speed of pure solving relative to creating the clauses.
 
 ---
 ## Automation
@@ -235,6 +235,8 @@ This part of the bot was easily the most annoying.  I will briefly list what the
 6. Find the pipe paths for each cell, then determine a coordinate path to drag the mouse through.
 7. Execute the mouse instructions and solve the puzzle.
 
+You'll notice I made the bot for macOS.  The most important reason is that my primary machine is a macbook.  Also, the macOS app store supports some mobile applications designed for iOS thanks to their shared parent company.  This allows me to run Flow Free without the use of a virtual machine or emulator such as BlueStacks.
+
 ### Initializing the bot
 
 I implement the bot as an object, and upon creation it does several things:
@@ -246,7 +248,7 @@ I implement the bot as an object, and upon creation it does several things:
 
 This was surprisingly annoying.  *You'll notice this is a recurring theme! :)*
 
-MacOS has a built-in screenshot system.  By default, the keyboard shortcut is `cmd` + `shift` + `4`, which allows you to drag the cursor over a section of a screen.  There is also a terminal command:
+macOS has a built-in screenshot system.  By default, the keyboard shortcut is `cmd` + `shift` + `4`, which allows you to drag the cursor over a section of a screen.  There is also a terminal command:
 
 ```sh
 screencapture -R100,200,300,400 ~/Desktop/screenshot.png
@@ -256,7 +258,7 @@ This would take a screenshot of the rectangular region 100 pixels from the left,
 
 The next method I tried was [Pillow / PIL](https://pypi.org/project/pillow/), a Python image processing library.  This was even slower.
 
-Turning to stack overflow, I ended up using [MSS](https://github.com/BoboTiG/python-MSS).
+After turning to stack overflow, I ended up using [MSS](https://github.com/BoboTiG/python-MSS).
 
 I tested each method by taking 10 fullscreen screenshots.  Here were the average times:
 
@@ -276,7 +278,7 @@ Average screencapture time: 0.1088 seconds
           Average MSS time: 0.0639 seconds
 ```
 
-The native `screencapture` command used about 72% of the time compared to a fullscreen screenshot.  Pillow used 27%, and MSS used 37%.  I don't know what causes such a disparity, especially when 33% of the time should be expected.  But whatever, MSS seems like the fastest method so that's what I ended up using.
+The native `screencapture` command used about 72% of the time compared to a fullscreen screenshot.  Pillow used 27%, and MSS used 37%.  I don't know what causes such a disparity, especially when 33% of the time should be expected.  But whatever, MSS seems like the fastest method so that's what I ended up using.  Any small time save adds up for time trials, so I needed any worthwhile optimizations I could.  Spoiler: the final bot can solve well over 30 5-by-5 puzzles in 30 seconds, meaning even with MSS about 2 full seconds are used to just take screenshots!
 
 ### Find the puzzle dimensions
 
