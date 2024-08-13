@@ -14,7 +14,7 @@ image:
 
 ## **Too long, didn't read**
 For readers who are just interested in seeing the bot in action, here is a time trial demo:
-{% include embed/youtube.html id='-yLt4shM00s' %}
+{% include embed/youtube.html id='GEJYJOYi5_c' %}
 
 ---
 ## **Introduction**
@@ -704,13 +704,19 @@ Obviously, the more points searched, the more likely the true optimal path is fo
 
 A demonstration of speed in solving many puzzles in quick succession.
 
+Q: Why is the bot only solving 34 puzzles when your best is 35?  A: The bot got lucky when it solved 35.  It had some easier puzzles which took less time to solve, and the small time saves added up.
+
 #### 5x5 - 30 seconds
-#### 6x6 - 30 seconds
-#### 7x7 - 30 seconds
-#### 8x8 - 30 seconds
+{% include embed/youtube.html id='GEJYJOYi5_c' %}
+
 #### 9x9 - 30 seconds
+{% include embed/youtube.html id='acRdvVHRM0E' %}
+
 #### 5x5 - 4 minutes
+{% include embed/youtube.html id='tZ9pJd76trc' %}
 
 ### Large puzzles
 
 A demonstration of efficiency in solving gigantic puzzles.
+
+{% include embed/youtube.html id='uXpEVKPRwmY' %}
