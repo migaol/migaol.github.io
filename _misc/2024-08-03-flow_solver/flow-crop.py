@@ -26,6 +26,6 @@ def main(folder: str, to_edit: List[str], ext):
 
 if __name__ == '__main__':
     folder = '../../assets/img/2024-08-03-flow_solver'
-    to_edit = ['puzzle3-blank']
+    to_edit = ['puzzle3-solved']
     ext = '.jpg'
     main(folder, to_edit, ext)

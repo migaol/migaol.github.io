@@ -118,21 +118,21 @@ As seen in the example above, you can't just "know" the solution without trying 
 
 Note that this not impossible to implement, I just thought it would not be worth the resources.  In fact, other people have implemented this!  Check the appendix for more.
 
-I initially considered a different approach to this problem, [**A-star (A\*) search**](https://en.wikipedia.org/wiki/A*_search_algorithm).  In short, A\* is a form of DFS which guides the search using heuristics which quantify the closeness of a path to the final solution to take more likely paths before unlikely ones, so it will probably never even consider an incorrect path.  The idea is that if DFS takes too long, then an optimized version should do better.  However, I could not come up with a good heuristic to use.
+I initially considered a different approach to this problem, [**A-star (A\*) search**](https://en.wikipedia.org/wiki/A*_search_algorithm).  In short, A\* is a form of DFS which guides the search using heuristics which quantify the closeness of a path to the final solution to take more likely paths before unlikely ones, so it will probably never even consider most paths which don't go in the right direction.  The idea is that if DFS takes too long, then an optimized version should do better.
 
-Note that we wouldn't be using A\* to find pipe connections directly; at each stage of the search, the search would consider an entire state of the grid with its unique collection of pipe connections holistically.  The source would then be an empty puzzle and the target would be a solved state, and the search traverses through various puzzle states.
+Note that we wouldn't be using A\* to find pipe connections directly; at each stage of the search, the search would consider an entire state of the grid with its unique collection of pipe connections holistically.  The search would begin at the empty puzzle, traverse through puzzle states, and eventually arrive at the target solved puzzle state.
 
-It's difficult to quantify certain characteristics, such as how "close" a game state is to the solution, which is necessary for A\* to function.  Pipe percent (the percentage of the grid covered by pipe) is one metric, but it is almost useless because of things like this:
+However, I could not come up with a good heuristic to use.  It's difficult to quantify certain characteristics, such as how "close" a game state is to the solution, which is necessary for A\* to function.  Pipe percent (the percentage of the grid covered by pipe) is one metric, but it is almost useless because of things like this:
 <figure class="disp-flex center-all flex-column">
   <img src="large_pipe_pct.jpg" alt="Pipe percentage is useless" class="w-50">
   <figcaption class="caption">We're 91% of the way to solving the puzzle!  Wait...</figcaption>
 </figure>
 
-Additionally, to quantify closeness to a solution, it is necessary to consider terminals which are cut off from their counterpart (for example, every non-aqua terminal in the image above).  However, this requires checking the entire grid at each state which I thought would be inefficient.
+Additionally, to quantify closeness to a solution, it is necessary to consider terminals which are cut off from their counterpart (for example, every non-aqua terminal in the image above).  Despite the fact that this consideration saves unnecessarily exploring an incorrect puzzle state, it also requires checking the entire grid at each step, which I thought would be inefficient.
 
 #### **An open-end strategy?**
 
-One day, this video was recommended to me:
+One day, this video popped up in my YouTube recommendations:
 {% include embed/youtube.html id='_2A3j9hSqnY' %}
 Coincidentally, the creator of the video was a classmate of mine!  I only realized this very recently.  Anyway--
 
@@ -145,7 +145,7 @@ We need not get bogged down in the theory of this, but the key here is that solv
 
 The SAT problem takes a boolean formula called $$\phi$$ as input, which is essentially a set of variables $$x_1, x_2, ...$$ with boolean operators.  For example,
 $$\phi = (x_1 \lor x_2) \land (x_3 \lor \neg x_1)$$
-is a boolean formula.  It then outputs a boolean value assignment $$\rho$$ for these variables such that $$\phi$$ evaluates to true.  In this case, the assignment
+is a boolean formula (see the next paragraph for notation).  It then outputs a boolean value assignment $$\rho$$ for these variables such that $$\phi$$ evaluates to true.  In this case, the assignment
 $$\rho = \{x_1=F, x_2=T, x_3=T\}$$
 would result in
 $$\rho(\phi) = (F \lor T) \land (T \lor \neg F)$$
@@ -180,13 +180,32 @@ To do this, let's look at the rules again.  They will function as guidelines to 
 - All cells in the grid should be filled.
   - If all cells should be filled, then they should all be some color.  Also note should also be exactly one color.  This sounds obvious but we will have to explicitly enforce it for the reduction to work.
 - All pipes are minimal paths; that is, a pipe will not "zigzag" needlessly when it could take a shorter route.
-  - This one seems difficult to enforce, but it boils down to 1) a pipe cell requires exactly two neighbors of the same color (the previous and next cells in the pipe connection) and 2) a terminal cell requires exactly one neighbor of the same color, so terminals are connected to a pipe and serve as an endpoint.
+  - This one seems difficult to enforce, but it boils down to:
+    1. A pipe cell requires exactly two neighbors of the same color: the previous and next cells in the pipe connection
+    2. A terminal cell requires exactly one neighbor of the same color, so terminals are connected to a single pipe and serve as an endpoint.
+  - To allow this, we have to adjust the graph definition.  We will include an edge if and only if it connects two neighboring cells-- that is, if one of the cells is a pipe.  Likewise, two cells are neighboring but are not connected via a pipe, the graph representation should have no edge.
+<figure class="disp-flex center-all flex-column">
+  <div class="disp-flex center-all">
+    <img src="puzzle3-blank.jpg" alt="grid representation" class="w-40">
+    <span class="lr10">&#8594;</span>
+    <img src="puzzle3-no_edges_graph.jpg" alt="graph representation without edges" class="w-40">
+  </div>
+  <figcaption class="caption">A grid without any pipes should be represented as a graph without any edges.</figcaption>
+</figure>
+<figure class="disp-flex center-all flex-column">
+  <div class="disp-flex center-all">
+    <img src="puzzle3-solved.jpg" alt="grid representation, solved" class="w-40">
+    <span class="lr10">&#8594;</span>
+    <img src="puzzle3-solved_graph.jpg" alt="graph representation, solved and only with necessary edges" class="w-40">
+  </div>
+  <figcaption class="caption">All grid cells which are connected with pipes have edges in the graph representation.</figcaption>
+</figure>
 
 ### Encoding variables
 
-Now, we need to actually convert the rules into a boolean formula.  The first task should be deciding how to choose variables to represent various parts of the puzzle.  There are probably many ways to do this, but here's what I used.  I discuss this at a high level; if you are interested in the details you can view the code on github.
+Now, we need to actually convert the rules into a boolean formula.  The first task should be deciding how to choose variables to represent various parts of the puzzle.  There are probably many ways to do this, but here's what I used.  I discuss this at a high level; if you are interested in the details you can view the [code](https://github.com/migaol/flow-solver) on github.
 
-Each cell in the grid or vertex in the graph $$v$$ will receive a variable $$x_{v,c}$$ for each color $$c$$ in the puzzle.  I will use "cell" and "vertex" interchangeably here, since they now essentially refer to the same entity, just in a different representation.
+Each cell in the grid or vertex $$v$$ in the graph will receive a variable $$x_{v,c}$$ for each color $$c$$ in the puzzle.  I will use "cell" and "vertex" interchangeably here, since they now essentially refer to the same entity, just in a different representation.
 
 In other words, if we have a 10-by-10 puzzle with 9 unique colors as in the example before, we will create $$10*10*9 = 900$$ variables to represent the vertices, one for every combination of row, column, and color.  The reason we have so many duplicates is because these are boolean variables; they simply encode a true or false state and are thus incapable of encoding the complex information we need to represent every color.
 
@@ -202,13 +221,13 @@ Then, for vertices, we just need to create CNF clauses as follows:
 Each potential edge $$e=(u,v)$$ in the graph will receive a single variable $$x_e$$ denoting whether it exists or not.  If the edge exists and $$x_e$$ is true, then a pipe connects the two cells corresponding to $$u$$ and $$v$$.  If the edge does not exist and $$x_e$$ is false, then no pipe conection exists between $$u$$ and $$v$$.
 
 Then, we only need one additional rule for CNF clauses:
-- An edge exists if and only if the cells it is incident on are the same color.  The issue of only two edges per vertex is covered above.
+- An edge exists if and only if the cells it is incident on are the same color.  The condition of exactly two edges per vertex is covered above.
 
 ### Using a SAT Solver
 
-The last step is to feed these clauses into a SAT solver.  I chose [Glucose 4.2.1](https://github.com/audemard/glucose) arbitrarily, and although I have not tested other solvers, I would assume they perform similarly for all relevant puzzles.  The largest puzzles (excluding expansion packs) in the game are 15 by 18 grid cells, use somewhere around 40,000 clauses, and take an insignificant amount of time to solve compared to the other aspects of the bot...
+The last step is to feed these clauses into a SAT solver.  I chose [Glucose 4.2.1](https://github.com/audemard/glucose) arbitrarily, and although I have not tested other solvers, I would assume they perform similarly for all relevant puzzles.  The largest puzzles (excluding expansion packs) in the game are 15 by 18 grid cells, use somewhere around 40,000 clauses, and take an insignificant amount of time to solve compared to the other aspects of the bot.
 
-This is Jumbo Rectangle - 150, the final level of the largest board size.  With 270 cells and 13 colors, it required 41,515 clauses and 0.0333 seconds to solve.  Not bad!  Pardon the messy output; this is just the SAT solver end of the bot and I did not see any necessity in making the text output fancy.
+The puzzle below is Jumbo Rectangle - 150, the final level of the largest board size.  With 270 cells and 13 colors, it required 41,515 clauses and 0.0333 seconds to solve.  Not bad!  Pardon the messy output; this is just the SAT solver end of the bot and I did not see any necessity in making the text output fancy.  The blocks of text are unimportant, but solve statistics are displayed at the bottom of the third image.
 
 <figure class="disp-flex center-all flex-column">
   <div class="disp-flex center-all">
@@ -234,12 +253,12 @@ This part of the bot was easily the most annoying.  I will briefly list what the
 5. Solve the puzzle, using the SAT reducer and solver.
 6. Find the pipe paths for each cell, then determine a coordinate path to drag the mouse through.  Then execute the mouse instructions and solve the puzzle.
 
-You'll notice I made the bot for macOS.  The most important reason is that my primary machine is a macbook.  Also, the macOS app store supports some mobile applications designed for iOS thanks to their shared parent company.  This allows me to run Flow Free without the use of a virtual machine or emulator such as BlueStacks.
+I made the bot for macOS only.  The most important reason is that my primary machine is a macbook.  Also, the macOS app store supports some mobile applications designed for iOS (such as Flow Free) thanks to their shared parent company.  This allows me to run Flow Free without the use of a virtual machine or emulator such as BlueStacks.
 
 ### Initializing the bot
 
 I implement the bot as an object, and upon creation it does several things:
-1. Find the game window and move it to focus.  This just saves time, since during testing it gets pretty annoying switching from my code editor or terminal to the other window so mouse clicks work correctly.  It also helps to check that the game is actually open before doing anything.
+1. Find the game window and move it to focus.  This just saves time, since during testing it gets pretty annoying switching from my code editor or terminal to the other window so mouse clicks work correctly.  It also helps to check that the game is actually open before doing anything and potentially clicking in unwanted places.
 2. Get the location and dimensions of the window.  This allows the bot to function in any (normal) setting and removes the need to hard-code numbers or position the game window in a certain location.
 3. Get the monitor dimensions.  This is useful later for image processing.  I have not tested every monitor dimension so this doesn't guarantee system compatibility, but it should work for all reasonable screens.
 
@@ -639,7 +658,7 @@ With `mouseUpDown = False` and minimal pausing between mouse drags, however, I n
 
 ### Python and system
 
-This project was made in Python because 1) it is my language of choice, 2) it is simple to use, and 3) it has many libraries available.  However, none of the libraries or features I use would necessitate Python.  The big libraries I use, `cv2` and `pysat`, are implemented in C++.  Everything else has viable alternatives or can be worked around, so this bot could also be made a faster language like C++.  Looking at the time requirements for each step though, it does not seem like rewriting in C++ would make a big difference; almost 99% of the solve time goes to mouse movement and screenshots, both of which are limited by the OS.
+To reiterate from the automation section above, this project was made in Python because 1) it is my language of choice, 2) it is simple to use, and 3) it has many libraries available.  However, none of the libraries or features I use would necessitate Python.  The big libraries I use, `cv2` and `pysat`, are implemented in C++.  Everything else has viable alternatives or can be worked around, so this bot could also be made a faster language like C++.  Looking at the time requirements for each step though, it does not seem like rewriting in C++ would make a big difference; almost 99% of the solve time goes to mouse movement and screenshots, both of which are limited by the OS.
 
 I would be interested in seeing if Linux behaves differently with mouse movements, or if Windows and [AutoHotKey](https://www.autohotkey.com/) would offer more efficiency.
 
@@ -698,7 +717,7 @@ However, the path finder is still useful.  Consider other example paths, where t
 
 Obviously, the more points searched, the more likely the true optimal path is found.  However, this has sacrifices in the time department.  I have experimented with brute-forcing a solution and pausing the time trial while solving puzzles, but the pausing/unpausing resulting in more time loss than the optimal solution saved.  Until I can figure out a better path finding algorithm, this is the best the bot can do.
 
-## The bot in action
+## Bot demonstration
 
 ### Time trials
 
@@ -720,3 +739,19 @@ Q: Why is the bot only solving 34 puzzles when your best is 35?  A: The bot got 
 A demonstration of efficiency in solving gigantic puzzles.
 
 {% include embed/youtube.html id='uXpEVKPRwmY' %}
+
+## Appendix & Acknowledgements
+
+The development of this Flow Free solver and bot would not be possible without the help of other people.  Many thanks to the contributors and maintainers of all the libraries I used, especially [OpenCV](https://opencv.org/), as well as Stack Overflow and Super User users from a decade ago for several obscure problems and questions I had.
+
+In an initial iteration of the bot, I coded the automation end and used someone else's Flow Free solver as a proof of concept.  This [solver](https://github.com/mzucker/flow_solver), made by Matt Zucker, is a nice little program which also solves puzzles using SAT via a graph representaiton.  I used it to abstract the solving part away, just feeding it input and decoding its output to use for my bot.  After seeing the bot did work well (a record of 32 5-by-5 puzzles in a 30 second time trial before optimizations), I decided to make my own bot.  Though the idea is similar I coded from scratch and made some improvements.  Aside from using a less lightweight SAT solver than Matt Zucker's [`pycosat`](https://github.com/conda/pycosat), my version also uses less clauses and a different way of enforcing puzzle rules to solve puzzles quicker.
+
+Also, thanks to [probabilis](https://www.youtube.com/@probabilis2992/videos) for the Flow Free computability [video](https://www.youtube.com/watch?v=_2A3j9hSqnY) which made creating the solver a lot easier.
+
+There are a couple other Flow Free bots out there:
+- A hard-coded Windows version which uses SAT reduction: [https://github.com/MusadiqPasha/FlowFree-Solver](https://github.com/MusadiqPasha/FlowFree-Solver)
+- A bot with a video tutorial series which incorporates OpenCV: [https://github.com/lukegarbutt/Flow-Free-Solver](https://github.com/lukegarbutt/Flow-Free-Solver)
+
+There are many solvers without automation as well, but I believe my bot is unique in many aspects.
+
+If there are any mistakes or typos in this don't hesitate to email me so I can correct it.  Thanks for reading! :)

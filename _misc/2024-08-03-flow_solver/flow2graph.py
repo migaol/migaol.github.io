@@ -9,9 +9,9 @@ COLORS = {
     "B": rgb_to_color(( 20,  40, 245)), # blue
     "Y": rgb_to_color((232, 223,  73)), # yellow
     "O": rgb_to_color((235, 142,  52)), # orange
-    "C": rgb_to_color((117, 251, 253)), # cyan
+    "A": rgb_to_color((117, 251, 253)), # aqua
     "M": rgb_to_color((234,  53, 193)), # magenta
-    "m": rgb_to_color((151,  52,  48)), # maroon
+    "N": rgb_to_color((151,  52,  48)), # maroon
     "P": rgb_to_color((116,  20, 123)), # purple
     "W": rgb_to_color((255, 255, 255))  # white
 }
@@ -36,24 +36,30 @@ class GridGraph(Scene):
         circles: List[Circle] = []
         for r in range(grid_size):
             for c in range(grid_size):
-                color = COLORS.get(grid[c][r], WHITE)
+                cell = grid[c][r]
+                color = COLORS.get(cell.upper(), rgb_to_color((32, 32, 32)))
                 circle = Circle(radius=radius, color=color)
-                if not grid[c][r] == ".": circle.set_fill(color, opacity=1)
+                if cell.isupper(): circle.set_fill(color, opacity=1)
                 circle.move_to(np.array([r * spacing + x_offset, (grid_size - 1 - c) * spacing + y_offset, 0])) # invert coords
                 circles.append(circle)
 
         edges = []
         for r in range(grid_size):
             for c in range(grid_size):
+                cell = grid[c][r]
+                color = COLORS[cell.upper()]
                 if r < grid_size - 1: # horizontal
-                    line = Line(circles[r * grid_size + c].get_center() + np.array([radius, 0, 0]),
-                                circles[(r+1) * grid_size + c].get_center() + np.array([-radius, 0, 0]),
-                                color=COLORS["."])
-                    edges.append(line)
+                    if cell != "." and cell.upper() == grid[c][r+1].upper():
+                        line = Line(circles[r * grid_size + c].get_center() + np.array([radius, 0, 0]),
+                                    circles[(r+1) * grid_size + c].get_center() + np.array([-radius, 0, 0]),
+                                    color=color)
+                        edges.append(line)
                 if c < grid_size - 1: # vertical
-                    line = Line(circles[r * grid_size + c].get_center() + np.array([0, -radius, 0]),
-                                circles[r * grid_size + (c+1)].get_center() + np.array([0, radius, 0]), color=COLORS["."])
-                    edges.append(line)
+                    if cell != "." and cell.upper() == grid[c+1][r].upper():
+                        line = Line(circles[r * grid_size + c].get_center() + np.array([0, -radius, 0]),
+                                    circles[r * grid_size + (c+1)].get_center() + np.array([0, radius, 0]),
+                                    color=color)
+                        edges.append(line)
 
         self.add(*edges)
         self.add(*circles)
