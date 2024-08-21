@@ -10,9 +10,9 @@ Hi, I'm Michael.  I am currently a student at the <span><img src="/assets/img/pe
 
 I was born in Houston, TX and now live in Pennsylvania.
 
-&larr; This picture was taken somewhere off the coast of New Jersey.  The sky looks good because it had just rained (if you look closely my shirt is soaked).
+The picture here was taken somewhere off the coast of New Jersey.  The sky looks good because it had just rained (if you look closely my shirt is soaked).
 
-Side note: "migaol" is not a typo.  It's supposed to be "Miguel", the Spanish/Portuguese derivation of "Michael", but I put my last name in the middle.
+P.S.: "migaol" is not a typo.  It's supposed to like be "Miguel", the Spanish/Portuguese derivation of "Michael", but I put my last name in the middle.
 
 I don't really know what else to put here.
 
