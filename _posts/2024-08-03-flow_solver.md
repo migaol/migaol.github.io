@@ -181,8 +181,8 @@ To do this, let's look at the rules again.  They will function as guidelines to 
   - If all cells should be filled, then they should all be some color.  Also note should also be exactly one color.  This sounds obvious but we will have to explicitly enforce it for the reduction to work.
 - All pipes are minimal paths; that is, a pipe will not "zigzag" needlessly when it could take a shorter route.
   - This one seems difficult to enforce, but it boils down to:
-    1. A pipe cell requires exactly two neighbors of the same color: the previous and next cells in the pipe connection
-    2. A terminal cell requires exactly one neighbor of the same color, so terminals are connected to a single pipe and serve as an endpoint.
+    1. A pipe cell requires exactly two neighbors of the same color: the previous and next cells in the pipe connection.  If there are fewer than two, then the pipe cell has a hanging end.  If there are more than two, then the pipe cell is part of some zigzagging part of the pipe.
+    2. A terminal cell requires exactly one neighbor of the same color, so terminals are connected to a single pipe and serve as an endpoint.  If there is more than one neighbor, then the terminal would be adjacent to another pipe.
   - To allow this, we have to adjust the graph definition.  We will include an edge if and only if it connects two neighboring cells-- that is, if one of the cells is a pipe.  Likewise, two cells are neighboring but are not connected via a pipe, the graph representation should have no edge.
 <figure class="disp-flex center-all flex-column">
   <div class="disp-flex center-all">
@@ -215,7 +215,7 @@ Then, for vertices, we just need to create CNF clauses as follows:
   - The vertex should be at most one color.  This may seem like a given, but because of how edges will work, we do have to enforce this with additional clauses.
   - Exactly one incident edge exists.  For each of the variables corresponding to the 4 or less possible edges, only one should be true.  We encode the edges with variables; see below for more.
 - For each empty cell (to-be pipe cell):
-  - The vertex exactly one color.  It can be any of the valid colors, but colors are exclusive.
+  - The vertex is exactly one color.  It can be any of the valid colors, but colors are exclusive.
   - Exactly two incident edges exist.  These are not terminal cells, so a path must exist in and out of the vertex.
 
 Each potential edge $$e=(u,v)$$ in the graph will receive a single variable $$x_e$$ denoting whether it exists or not.  If the edge exists and $$x_e$$ is true, then a pipe connects the two cells corresponding to $$u$$ and $$v$$.  If the edge does not exist and $$x_e$$ is false, then no pipe conection exists between $$u$$ and $$v$$.
