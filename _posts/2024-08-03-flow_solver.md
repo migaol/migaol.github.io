@@ -68,7 +68,7 @@ Currently, my bot only supports rectangular grids with these three standard rule
 
 For a human player, finding a solution is not too difficult, especially for the simpler puzzles.  Us monkeys can use heuristics, logic, and intuition to find a solution.
 
-In this example, you might guess that the red terminals shold connect along the left border, just because it "feels right".
+In this example, you might guess that the red terminals should connect along the left border, just because it "feels right".
 <figure class="disp-flex center-all">
   <img src="puzzle1-0.jpg" alt="puzzle 0" class="w-25">
   <span class="lr10">&#8594;</span>
